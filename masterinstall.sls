@@ -28,10 +28,10 @@
   file.symlink:
     - target: /opt/etcd/etcdctl
 
-/usr/lib/systemd/system/etcd.service:
+/etc/init.d/etcd:
   file:
     - managed
-    - source: salt://service/etcd.service
+    - source: salt://service/etcd
     - user: root
     - group: root
     - mode: 755
@@ -84,7 +84,7 @@ etcd:
 
 
 #Pull down Systemd Service definitions
-/usr/lib/systemd/system/kube-apiserver.service:
+/etc/init.d/kube-apiserver:
   file:
     - managed
     - source: salt://systemd/kube-apiserver.service
@@ -92,18 +92,18 @@ etcd:
     - group: root
     - mode: 755
 
-/usr/lib/systemd/system/kube-controller.service:
+/etc/init.d/kube-controller:
   file:
     - managed
-    - source: salt://systemd/kube-controller.service
+    - source: salt://systemd/kube-controller
     - user: root
     - group: root
     - mode: 755
 
-/usr/lib/systemd/system/kube-scheduler.service:
+/etc/init.d/kube-scheduler:
   file:
     - managed
-    - source: salt://systemd/kube-scheduler.service
+    - source: salt://systemd/kube-scheduler
     - user: root
     - group: root
     - mode: 755
@@ -114,7 +114,7 @@ kube-apiserver:
     - running
     - enable: true
     - watch:
-      - file: /usr/lib/systemd/system/kube-apiserver.service
+      - file: /etc/init.d/kube-apiserver
 
 kube-controller:
   service:
@@ -130,22 +130,3 @@ kube-scheduler:
 /usr/local/bin/kubectl:
   file.symlink:
     - target: /opt/kubernetes/kubectl
-[root@k8s-master saltstack-master]# more top.sls 
-base:
-  '*':
-    - baseinstall
-  '*masta*':
-    - masterinstall
-    - pods
-  'host:kubminion1':
-    - match: grain
-    - minion1
-  'host:kubminion2':
-    - match: grain
-    - minion2
-  'host:kubminion3':
-    - match: grain
-    - minion3
-  'host:kubminion4':
-    - match: grain
-    - minion4    
